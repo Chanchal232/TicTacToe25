@@ -2,7 +2,8 @@ package org.example.tictactoe25.strategies.botPlayingStrategy;
 
 import org.example.tictactoe25.models.Board;
 import org.example.tictactoe25.models.Move;
+import org.example.tictactoe25.models.Player;
 
 public interface BotPlayingStrategy {
-    Move makeMove(Board board);
+    Move makeMove(Board board, Player player);
 }

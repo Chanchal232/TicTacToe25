@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 @SpringBootApplication
 public class TicTacToe25Application {
@@ -16,11 +17,43 @@ public class TicTacToe25Application {
 
         System.out.println("Welcome to TicTacToe - 2025");
         //Client needs to know the internal of system
+        Scanner in = new Scanner(System.in);
+        System.out.println("What should be the dimension of Game");
+        int dimension = in.nextInt();
 
-        int dimension = 3;
+        System.out.println("Will there be any bot in the game? y/n");
+        String isBot = in.next();
+
+        //The number of player
+        int toIterate = dimension - 1;
+
+        if(isBot.equals("y")){
+            toIterate = dimension - 2;
+        }
         List<Player> playerList = new ArrayList<>();
-        playerList.add(new Player("Chanchal",new Symbol('x')));
-        playerList.add(new Bot("GPT Player",new Symbol('0'), BotDifficultyLevel.MEDIUM));
+
+        for(int i=0;i<toIterate;i++){
+            System.out.println("What is the name of player : " + i + 1);
+            String playerName = in.next();
+
+
+            System.out.println("What is the name of symbol : "+i+1);
+            String playerSymbol = in.next();
+
+            playerList.add(new Player(playerName,new Symbol(playerSymbol.charAt(0))));
+
+        }
+
+        if(isBot.equals("y")){
+            System.out.println("What is the name of BOT player : ");
+            String playerName = in.next();
+
+            System.out.println("What is the symbol of Bot ?");
+            String playerSymbol = in.next();
+
+            playerList.add(new Bot(playerName,new Symbol(playerSymbol.charAt(0)), BotDifficultyLevel.EASY));
+
+        }
 
 
         /**
@@ -42,8 +75,14 @@ public class TicTacToe25Application {
             //Display the board
             gameController.displayBoard(game);
 
-            //makeMove
-            gameController.makeMove(game);
+            System.out.println("Does anyone want to undo? y/n");
+            String input = in.next();
+            if(input.equals("y")){
+                gameController.undo(game);
+            }else{
+                //makeMove
+                gameController.makeMove(game);
+            }
         }
 
         //Check if win or draw

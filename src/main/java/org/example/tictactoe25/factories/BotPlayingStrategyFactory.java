@@ -11,18 +11,22 @@ import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
 
 public class BotPlayingStrategyFactory {
 
-    public static BotPlayingStrategy getBotPlayingStrategy(BotDifficultyLevel level) throws InvalidBotDifficultyException {
-        switch (level) {
-            case EASY:
-                return new EasyBotPlayingStrategy();
-            case HARD:
-                return new HardBotPlayingStrategy();
-            case MEDIUM:
-                return new MediumBotPlayingStrategy();
-            default:{
-                throw new InvalidBotDifficultyException("Invalid Bot level "+level);
-            }
-        }
-
+    public static BotPlayingStrategy getBotPlayingStrategy(BotDifficultyLevel level) {
+       try {
+           switch (level) {
+               case EASY:
+                   return new EasyBotPlayingStrategy();
+               case HARD:
+                   return new HardBotPlayingStrategy();
+               case MEDIUM:
+                   return new MediumBotPlayingStrategy();
+               default: {
+                   throw new InvalidBotDifficultyException("Invalid Bot level " + level);
+               }
+           }
+       }catch (Exception e){
+           System.out.println(e.getMessage());
+       }
+        return null;
     }
 }

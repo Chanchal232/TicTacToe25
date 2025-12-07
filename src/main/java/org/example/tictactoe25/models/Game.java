@@ -87,7 +87,7 @@ public class Game {
     }
 
     public void displayBoard() {
-        this.board.displayBoard();
+        this.board.displayBoard(this.players);
     }
 
     public void makeMove() throws InvaliMoveException {
@@ -98,13 +98,24 @@ public class Game {
         Move move = currentPlayer.makeMove(board);
 
         //Game will validate move
-        if(!validateMove(move)){
-            throw new InvaliMoveException("Invalid Move");
+        if(!isMoveValid(move)){
+            System.out.println("This is not valid cell "+currentPlayer.getName()+"'s move");
+            //throw new InvaliMoveException("Invalid Move");
+            return;
         }
+
+        Cell cell = move.getCell();
+        if(!cell.isEmpty()){
+            System.out.println("This cell is not empty. Please try another one");
+            return;
+        }
+
+
+
         int row = move.getCell().getRow();
         int col = move.getCell().getCol();
 
-        Cell cell = move.getCell();
+
         cell.setPlayer(currentPlayer);
         cell.setCellState(CellState.FILLED);
       //  move.setCell(cell);
@@ -135,7 +146,7 @@ public class Game {
         return false;
     }
 
-    private boolean validateMove(Move move) throws InvaliMoveException {
+    private boolean isMoveValid(Move move) throws InvaliMoveException {
         int row = move.getCell().getRow();
         int col = move.getCell().getCol();
 
@@ -145,7 +156,28 @@ public class Game {
                 col>=dimension){
             return false;
         }
-        return board.getBoard().get(row).get(col).isEmpty();
+        return true;
+    }
+
+    public void undo() {
+        if(moves.isEmpty()){
+            System.out.println("There is nothing to undo");
+            return;
+        }
+
+        //Get the last move
+        Move lastMove = moves.remove(moves.size()-1);
+
+        //Reset the cell on board
+        Cell cell = lastMove.getCell();
+        cell.setCellState(CellState.EMPTY);
+        cell.setPlayer(null);
+
+        //Update next player index to prev player
+        nextPlayerIndex = (nextPlayerIndex-1+players.size())%players.size();
+        //0 1 2 3 4 5
+        //If player 4 does and undo, then 3rd player's move gets undone
+        System.out.println("Last move is undone. Now its "+ players.get(nextPlayerIndex)+" turn");
     }
 
     //Create Static Internal Class for Builder
